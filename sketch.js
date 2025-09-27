@@ -3,14 +3,22 @@ let numPuntos = 80;
 let offsets = [];
 let time = 0;
 
-let surfers = [];
-let numSurfers = 200;
+let entidades = [];
+let numHumanoNoHumanos = 200;
 
 let viewX, viewY, viewW, viewH;
 let modoPlaneta = false;
 let planetaRotacion = 0;
 
+let video;
+let mostrarVideo = false;
+
 function setup() {
+  video = createVideo("https://www.dropbox.com/scl/fi/qwtenazm9o9any676tnp0/P9.mp4?rlkey=irt8duuq14k1z6o7e849jokl1&raw=1");
+  video.size(windowWidth, windowHeight);
+  video.hide();
+  video.loop();
+
   createCanvas(windowWidth, windowHeight);
   background(0);
 
@@ -21,25 +29,33 @@ function setup() {
     }
   }
 
-  for (let i = 0; i < numSurfers; i++) {
-    surfers.push(new Surfer());
+  for (let i = 0; i < numHumanoNoHumanos; i++) {
+    entidades.push(new HumanoNoHumano());
   }
 
   calcularVista();
 }
 
 function draw() {
+  if (mostrarVideo) {
+    image(video, 0, 0, width, height);
+    filter(BLUR, 1);
+    tint(255, 150);
+  } else {
+    background(0);
+  }
+
   background(0);
 
   if (!modoPlaneta) {
     dibujarOndasNormales();
-    for (let s of surfers) {
+    for (let s of entidades) {
       s.update();
       s.display();
     }
   } else {
     dibujarPlaneta();
-    for (let s of surfers) {
+    for (let s of entidades) {
       s.update();
       s.displaySobrePlaneta();
     }
@@ -50,6 +66,15 @@ function draw() {
 }
 
 function keyPressed() {
+  if (key === ' ') {
+    mostrarVideo = !mostrarVideo;
+    if (mostrarVideo) {
+      video.loop();
+    } else {
+      video.stop();
+    }
+  }
+
   if (keyCode === RIGHT_ARROW) modoPlaneta = true;
   if (keyCode === LEFT_ARROW) modoPlaneta = false;
 }
@@ -119,7 +144,7 @@ function dibujarPlaneta() {
   ellipse(cx, cy, r * 2, r * 2 * 0.95);
 }
 
-class Surfer {
+class HumanosNoHumanos {
   constructor() {
     this.reset();
   }
