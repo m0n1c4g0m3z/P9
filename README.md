@@ -1,4 +1,4 @@
-# 9. La ilusión de lo “post”
+# 9. La ilusión de lo “post”.
 
 Obra generativa interactiva construida con p5.js.  
 Forma parte de la exposición *SirocoLab 2025*.
