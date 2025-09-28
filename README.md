@@ -15,3 +15,5 @@ Forma parte de la exposición *SirocoLab 2025*.
   - Al pulsar nuevamente, se oculta y se continúa solo con la animación.
 
 > URL del proyecto: https://m0n1c4g0m3z.github.io/P9/
+
+*en proceso*
