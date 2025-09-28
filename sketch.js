@@ -2,10 +2,12 @@ let numLineas = 100;
 let numPuntos = 80;
 let offsets = [];
 let time = 0;
-let lineColor;
+
 let surfers = [];
 let numSurfers = 200;
+
 let viewX, viewY, viewW, viewH;
+
 let modoPlaneta = false;
 let planetaRotacion = 0;
 
@@ -18,9 +20,8 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(405, 720);
   background(0);
-  lineColor = color(255);
   calcularVista();
 
   for (let i = 0; i < numLineas; i++) {
@@ -73,20 +74,12 @@ function keyPressed() {
     }
   }
 
-  if (keyCode === RIGHT_ARROW) {
-    modoPlaneta = true;
-  } else if (keyCode === LEFT_ARROW) {
-    modoPlaneta = false;
-  }
-}
-
-function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
-  calcularVista();
+  if (keyCode === RIGHT_ARROW) modoPlaneta = true;
+  if (keyCode === LEFT_ARROW) modoPlaneta = false;
 }
 
 function calcularVista() {
-  let windowRatio = float(width) / float(height);
+  let windowRatio = width / height;
   let targetRatio = 9.0 / 16.0;
 
   if (windowRatio > targetRatio) {
@@ -103,10 +96,9 @@ function calcularVista() {
 }
 
 function dibujarOndasNormales() {
-  lineColor = color(255, 255, 255, 60); // blanco muy suave, vaporoso
-  stroke(lineColor);
-  strokeWeight(1.2);
   noFill();
+  stroke(255, 140);
+  strokeWeight(1.2);
 
   for (let i = 0; i < numLineas; i++) {
     beginShape();
@@ -114,8 +106,7 @@ function dibujarOndasNormales() {
       let x = map(j, 0, numPuntos, viewX + viewW * 0.1, viewX + viewW * 0.9);
       let yOffset = noise(offsets[i][j] + time) * 100 - 50;
       let y = map(i, 0, numLineas, viewY + viewH * 0.1, viewY + viewH * 0.9) + yOffset;
-      let wave = sin(time * 0.05 + i * 0.1) * 15;
-      y += wave;
+      y += sin(time * 0.05 + i * 0.1) * 15;
       curveVertex(x, y);
       offsets[i][j] += 0.01;
     }
@@ -128,9 +119,9 @@ function dibujarPlaneta() {
   let cy = height / 2;
   let r = min(viewW, viewH) * 0.4;
 
-  stroke(100, 200, 255, 100);
-  strokeWeight(1);
   noFill();
+  stroke(100, 200, 255, 150);
+  strokeWeight(1);
 
   for (let i = 0; i < numLineas; i++) {
     let lat = map(i, 0, numLineas, -HALF_PI, HALF_PI);
@@ -152,7 +143,6 @@ function dibujarPlaneta() {
   ellipse(cx, cy, r * 2, r * 2 * 0.95);
 }
 
-// --- Clase Surfer ---
 class Surfer {
   constructor() {
     this.reset();
@@ -162,7 +152,7 @@ class Surfer {
     this.linea = int(random(numLineas));
     this.pos = random(1);
     this.speed = random(0.001, 0.005);
-    this.c = color(255, 255, 255, 70); // blanco suave
+    this.c = color(random(255), random(255), random(255), 180);
     this.shapeType = int(random(3));
   }
 
@@ -182,15 +172,9 @@ class Surfer {
     noStroke();
     let s = 8;
     switch (this.shapeType) {
-      case 0:
-        ellipse(x, y, s, s);
-        break;
-      case 1:
-        triangle(x, y - s / 2, x - s / 2, y + s / 2, x + s / 2, y + s / 2);
-        break;
-      case 2:
-        ellipse(x, y, s * 0.6, s);
-        break;
+      case 0: ellipse(x, y, s, s); break;
+      case 1: triangle(x, y - s / 2, x - s / 2, y + s / 2, x + s / 2, y + s / 2); break;
+      case 2: ellipse(x, y, s * 0.6, s); break;
     }
   }
 
@@ -198,6 +182,7 @@ class Surfer {
     let cx = width / 2;
     let cy = height / 2;
     let r = min(viewW, viewH) * 0.4;
+
     let j = int(this.pos * (numPuntos - 1));
     let lat = map(this.linea, 0, numLineas, -HALF_PI, HALF_PI);
     let lon = map(j, 0, numPuntos, -PI, PI);
@@ -210,15 +195,9 @@ class Surfer {
     noStroke();
     let s = 6;
     switch (this.shapeType) {
-      case 0:
-        ellipse(x, y, s, s);
-        break;
-      case 1:
-        triangle(x, y - s / 2, x - s / 2, y + s / 2, x + s / 2, y + s / 2);
-        break;
-      case 2:
-        ellipse(x, y, s * 0.6, s);
-        break;
+      case 0: ellipse(x, y, s, s); break;
+      case 1: triangle(x, y - s / 2, x - s / 2, y + s / 2, x + s / 2, y + s / 2); break;
+      case 2: ellipse(x, y, s * 0.6, s); break;
     }
   }
 }
